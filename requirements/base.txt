@@ -7,5 +7,5 @@ MySQL-python
 django
 django-model-utils
 Pillow==2.8.1
-pytz==2015.4
-
+pytz==2015.2
+django_openstack_auth

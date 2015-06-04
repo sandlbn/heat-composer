@@ -1,4 +1,5 @@
 import sys
+import os
 from os.path import join, abspath, dirname
 
 # PATH vars
@@ -27,7 +28,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
+    'openstack_auth'
 )
 
 PROJECT_APPS = ()
@@ -43,6 +45,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+AUTHENTICATION_BACKENDS = ('openstack_auth.backend.KeystoneBackend',)
+OPENSTACK_KEYSTONE_URL = "http://10.1.0.73:5000/v2.0"
 
 ROOT_URLCONF = 'heat-composer.urls'
 
@@ -76,6 +81,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = False
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+LOGIN_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -91,8 +99,21 @@ STATICFILES_DIRS = (
     root('assets'),
 )
 
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [os.path.join(PROJECT_ROOT, 'templates')],
+    'OPTIONS': {
+        'loaders': [
+            ('django.template.loaders.cached.Loader', [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ]),
+        ],
+    },
+}]
 TEMPLATE_DIRS = (
     root('templates'),
+    os.path.join(PROJECT_ROOT, "templates"),
 )
 
 
